@@ -40,7 +40,7 @@ export default async function U({ params }: { params: { slug: string } }) {
               src={user.image}
               alt="img"
               srcSet={user.image}
-              className="w-[130px] h-[130px] basis-1/4 rounded-full outline outline-2 outline-white object-contain object-center"
+              className="w-[130px] h-[130px] basis-1/4 rounded-full outline outline-2 outline-white object-cover object-center"
             />
             <div className="text-right basis-full ">
               <h1 className="text-3xl font-medium">{user.name}</h1>
