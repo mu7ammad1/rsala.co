@@ -1,14 +1,8 @@
-import Image from "next/image";
 import React from "react";
-import image from "@/assets/N4531AZ_23AU_GR361_02_02.webp";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
 const profile = {
-  image: image,
-  name: "muhammad osama",
-  username: "mu7ammad",
-  bio: "البشرية ليست وحدها في هذا الكون, البشرية ليست وحدها في هذا الكون, البشرية ليست وحدها في هذا الكون, البشرية ليست وحدها في هذا الكون",
   links: {
     link1: "fb.com/mu7ammad",
     link2: "tw.com/mu7ammad",

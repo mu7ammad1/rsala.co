@@ -22,3 +22,20 @@ export const GET = async (request, { params }) => {
         return NextResponse.json({ message: "GET ERROR0000", error }, { status: 500 })
     }
 }
+export const POST = async (request) => {
+    try {
+        const body = await request.json();
+        const { content,senderId,receiverId } = body
+        const newMessage = await db.message.create({
+            data: {
+                content,
+                senderId,
+                receiverId
+            }
+        })
+
+        return NextResponse.json(newMessage)
+    } catch (error) {
+        return NextResponse.json({ message: "POST error", error }, { status: 500 })
+    }
+}

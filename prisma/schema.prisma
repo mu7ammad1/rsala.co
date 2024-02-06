@@ -28,7 +28,7 @@ model User {
   emailVerified         DateTime               @default(now())
   image                 String                 @default("https://plus.unsplash.com/premium_photo-1666787742869-54bd5c564d47?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D")
   password              String?
-  address               Address?
+  address               Address
   role                  UserRole               @default(USER)
   isTwoFactorEnabled    Boolean                @default(false)
   twoFactorConfirmation TwoFactorConfirmation?
@@ -47,13 +47,6 @@ model Message {
 
   sender   User @relation("Sender", fields: [senderId], references: [id])
   receiver User @relation("Receiver", fields: [receiverId], references: [id])
-}
-
-model Messagehide {
-  id        String   @id @default(cuid()) @map("_id")
-  content   String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 }
 
 model Account {

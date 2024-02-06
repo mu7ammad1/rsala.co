@@ -1,3 +1,4 @@
+import { Analytics } from '@vercel/analytics/react';
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import { SessionProvider } from 'next-auth/react'
@@ -25,6 +26,7 @@ export default async function RootLayout({
         <body className={inter.className}>
           <Toaster />
           {children}
+          <Analytics />
         </body>
       </html>
     </SessionProvider>
