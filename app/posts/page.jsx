@@ -1,6 +1,6 @@
 
 async function getPostsData() {
-    const res = await fetch("http://localhost:3000/api/posts")
+    const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/posts`)
     return res.json()
 }
 
