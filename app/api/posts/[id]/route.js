@@ -6,27 +6,28 @@ export const GET = async (request, { params }) => {
   try {
     const { id } = params;
 
-    const Message = await db.user.findUnique({
+    const user = await db.user.findUnique({
       where: {
         username: id,
       },
       include: { receivedMessages: true, sentMessages: true },
     });
-    if (!Message) {
+    if (!user) {
       return NextResponse.json(
-        { message: "MESSAGE NOT FOUND", error },
+        { message: "user NOT FOUND", error },
         { status: 404 }
       );
     }
 
-    return NextResponse.json(Message);
+    return NextResponse.json(user);
   } catch (error) {
     return NextResponse.json(
-      { message: "GET ERROR0000", error },
+      { message: "user GET ERROR0000", error },
       { status: 500 }
     );
   }
 };
+// ارسال الرسالة
 export const POST = async (request) => {
   try {
     const body = await request.json();
@@ -44,16 +45,16 @@ export const POST = async (request) => {
   } catch (error) {
     return NextResponse.json({ message: "POST ERROR", error }, { status: 500 });
   }
-};
-
+}
+// هنا حذف الحساب فقط
 export const DELETE = async (request, { params }) => {
     try {
-        const { userId } = params;
+        const { id } = params;
 
         // حذف المستخدم بشكل مباشر
         await db.user.delete({
             where: {
-                id: userId
+                username: id
             }
         });
 
@@ -61,6 +62,6 @@ export const DELETE = async (request, { params }) => {
         return NextResponse.json({ message: "User deleted successfully" });
     } catch (error) {
         // تجاهل الخطأ الناتج من عدم وجود رسائل مرتبطة
-        return NextResponse.json({ message: "User deleted successfully" });
+        return NextResponse.json({ message: "User deleted Erorr" });
     }
 };

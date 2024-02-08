@@ -1,7 +1,9 @@
-"use client"
+"use client";
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import Loading_user from "@/components/comps/loading/loading_user";
+import NotFound_user from "@/components/comps/NotFound/NotFound_user";
 
 interface Profile {
   image: string;
@@ -33,9 +35,16 @@ const U: React.FC<{ params: { slug: string } }> = ({ params }) => {
     fetchData();
   }, [params.slug]);
 
-  if (!profiles) {
-    return <div>Loading...</div>;
+  
+  if (profiles === null) {    
+    return <Loading_user />;
   }
+  
+    if (profiles?.username == null) {
+  
+      return (
+        <NotFound_user />
+      );}
 
   return (
     <main className="mx-5">
