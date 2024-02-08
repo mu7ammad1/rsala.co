@@ -123,6 +123,24 @@ const SettingsPage = () => {
                   </FormItem>
                 )}
               />
+                            <FormField
+                control={form.control}
+                name="bio"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>bio</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        placeholder="bio"
+                        defaultValue={user?.bio}
+                        disabled={isPending}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
               {user?.isOAuth === false && (
                 <>
                   <FormField

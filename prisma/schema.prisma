@@ -13,40 +13,35 @@ enum UserRole {
   USER
 }
 
-// Address is an embedded document
-type Address {
-  state String?
-  city  String?
-}
-
 model User {
   id                    String                 @id @default(cuid()) @map("_id")
   name                  String                 @default(cuid())
-  username              String                 @unique @default(cuid())
-  bio                   String                 @default("")
+  username              String                 @unique @default(cuid()) @db.String
+  bio                   String                 @default("hello bio")
   email                 String                 @unique
   emailVerified         DateTime               @default(now())
-  image                 String                 @default("https://plus.unsplash.com/premium_photo-1666787742869-54bd5c564d47?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D")
+  image                 String                 @default("https://lh3.googleusercontent.com/pw/ABLVV87_rW0vm7TUWM8tKBU2mM-bTZjljfRPNkrC-UH93PmAObq8zK5McFfztvSeNySiKugH-l7eFxu0rBoezhi222RKIAZhNfFS-kj2vXuPfumtA2HyT6Z8VY_ieEf644VJqvApsSYiuYzCtBPiSR7SOt4oTw=w736-h552-s-no-gm?authuser=0")
   password              String?
-  address               Address?
   role                  UserRole               @default(USER)
   isTwoFactorEnabled    Boolean                @default(false)
   twoFactorConfirmation TwoFactorConfirmation?
   accounts              Account[]
-  messageSent           Message[]              @relation("Sender")
-  messageReceived       Message[]              @relation("Receiver")
+  sentMessages          Message[]              @relation("SentMessages")
+  receivedMessages      Message[]              @relation("ReceivedMessages")
 }
 
 model Message {
-  id         String   @id @default(cuid()) @map("_id")
-  content    String
-  senderId   String
-  receiverId String
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  isPublic  Boolean  @default(false)
 
-  sender   User @relation("Sender", fields: [senderId], references: [id])
-  receiver User @relation("Receiver", fields: [receiverId], references: [id])
+  sender   User   @relation("SentMessages", fields: [senderId], references: [id])
+  senderId String
+
+  receiver   User   @relation("ReceivedMessages", fields: [receiverId], references: [id])
+  receiverId String
 }
 
 model Account {
@@ -62,8 +57,7 @@ model Account {
   scope             String?
   id_token          String? @db.String
   session_state     String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }

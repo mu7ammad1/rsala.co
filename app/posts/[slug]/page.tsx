@@ -1,17 +1,10 @@
-import {
-  Key,
-  ReactElement,
-  JSXElementConstructor,
-  ReactNode,
-  ReactPortal,
-  PromiseLikeOfReactNode,
-} from "react";
 
 async function getPostsDataById(postId: string) {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/posts/${postId}`, {
+  const res = await fetch(`http://localhost:3000/api/posts/${postId}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
+      "Access-Control-Allow-Methods": "GET",
     },
   });
   return res.json();
@@ -30,7 +23,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
           posts
         </h1>
         <div className="grid grid-cols-1">
-          <span>{postss.name}</span>
+          <span>{postss.username}</span>
         </div>
       </div>
     </div>

@@ -6,7 +6,7 @@ import bcrypt from "bcryptjs";
 import { update } from "@/auth";
 import { db } from "@/lib/db";
 import { SettingsSchema } from "@/schemas";
-import { getUserByEmail, getUserById, getUserByUsername } from "@/data/user";
+import { getUserByEmail, getUserById } from "@/data/user";
 import { currentUser } from "@/lib/auth";
 import { generateVerificationToken } from "@/lib/tokens";
 import { sendVerificationEmail } from "@/lib/mail";
@@ -44,7 +44,6 @@ export const settings = async (
     if (existingUsername && existingUsername.username !== user.username) {
       return { error: "username already in use!" }
     }
-
 
 
     const verificationToken = await generateVerificationToken(
@@ -87,6 +86,7 @@ export const settings = async (
     user: {
       name: updatedUser.name,
       username: updatedUser.username,
+      bio: updatedUser.bio,
       email: updatedUser.email,
       isTwoFactorEnabled: updatedUser.isTwoFactorEnabled,
       role: updatedUser.role,

@@ -6,7 +6,7 @@ export const POST = async (request) => {
     try {
         const body = await request.json();
         const { content,senderId,receiverId } = body
-        const newMessage = await db.messagehide.create({
+        const newMessage = await db.message.create({
             data: {
                 content,
                 senderId,

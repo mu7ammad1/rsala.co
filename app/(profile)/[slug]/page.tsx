@@ -1,15 +1,18 @@
-import React from "react";
+"use client"
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
-const profile = {
-  links: {
-    link1: "fb.com/mu7ammad",
-    link2: "tw.com/mu7ammad",
-  },
-};
-async function getPostsDataById(postId: string) {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/posts/${postId}`, {
+interface Profile {
+  image: string;
+  name: string;
+  username: string;
+  bio: string;
+  // add any other fields you expect from the API response
+}
+
+async function getPostsDataById(postId: string): Promise<Profile> {
+  const res = await fetch(`http://localhost:3000/api/posts/${postId}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -17,41 +20,47 @@ async function getPostsDataById(postId: string) {
   });
   return res.json();
 }
-export default async function U({ params }: { params: { slug: string } }) {
-  const user = await getPostsDataById(params.slug);
+
+const U: React.FC<{ params: { slug: string } }> = ({ params }) => {
+  const [profiles, setProfiles] = useState<Profile | null>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await getPostsDataById(params.slug);
+      setProfiles(data);
+    };
+
+    fetchData();
+  }, [params.slug]);
+
+  if (!profiles) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <main className="mx-5">
       <div className="flex justify-center">
         <div className="w-[700px] mt-8 rounded-md ">
           <div className="flex flex-row">
-            {/* <Image
-              src={user.image}
-              alt={`profile-${user.image}`}
-              className="w-[130px] h-[130px] basis-1/4 rounded-full outline outline-2 outline-white object-contain object-center"
-            /> */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={user.image}
+              src={profiles.image}
               alt="img"
-              srcSet={user.image}
+              srcSet={profiles.image}
               className="w-[130px] h-[130px] basis-1/4 rounded-full outline outline-2 outline-white object-cover object-center"
             />
             <div className="text-right basis-full ">
-              <h1 className="text-3xl font-medium">{user.name}</h1>
+              <h1 className="text-3xl font-medium">{profiles.name}</h1>
               <h1 className="text-lg font-normal text-gray-800">
-                @{user.username}
+                @{profiles.username}
               </h1>
-              <p className="mt-1">{user.bio|| "No asfj kjsafjhlakd dh No asfj kjsafjhlakd dh kajhdkhNo asfj kjsafjhlakd dh kajhdkh "}</p>
+              <p className="mt-1">{profiles.bio}</p>
               <div className="flex justify-end space-x-3 mt-4 ">
-                <Link href={profile.links.link1}>
-                  <p className="text-[#101010] rounded-md">
-                    {profile.links.link1}
-                  </p>
+                <Link href={`#`}>
+                  <p className="text-[#101010] rounded-md">hello LINK</p>
                 </Link>
-                <Link href={profile.links.link2}>
-                  <p className="text-[#101010] rounded-md">
-                    {profile.links.link2}
-                  </p>
+                <Link href={`#`}>
+                  <p className="text-[#101010] rounded-md">hello LINK</p>
                 </Link>
               </div>
             </div>
@@ -77,4 +86,6 @@ export default async function U({ params }: { params: { slug: string } }) {
       </div>
     </main>
   );
-}
+};
+
+export default U;
