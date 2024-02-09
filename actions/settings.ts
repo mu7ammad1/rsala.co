@@ -85,7 +85,7 @@ export const settings = async (
   update({
     user: {
       name: updatedUser.name,
-      username: updatedUser.username,
+      username: updatedUser.username as string|| undefined,
       bio: updatedUser.bio,
       email: updatedUser.email,
       isTwoFactorEnabled: updatedUser.isTwoFactorEnabled,

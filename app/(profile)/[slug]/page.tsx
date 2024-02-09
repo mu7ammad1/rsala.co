@@ -15,7 +15,7 @@ interface Profile {
 
 
 async function getPostsDataById(postId: string): Promise<Profile> {
-  const res = await fetch(`http://localhost:3000/api/posts/${postId}`, {
+  const res = await fetch(`https://rsalaco.vercel.app/api/posts/${postId}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
