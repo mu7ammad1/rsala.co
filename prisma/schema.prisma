@@ -16,12 +16,14 @@ enum UserRole {
 model User {
   id                    String                 @id @default(cuid()) @map("_id")
   name                  String                 @default(cuid())
-  username              String                 @unique @default(cuid()) @db.String
+  username              String?                @unique @default(cuid()) @db.String
   bio                   String                 @default("hello bio")
   email                 String                 @unique
-  emailVerified         DateTime               @default(now())
-  image                 String                 @default("https://lh3.googleusercontent.com/pw/ABLVV87_rW0vm7TUWM8tKBU2mM-bTZjljfRPNkrC-UH93PmAObq8zK5McFfztvSeNySiKugH-l7eFxu0rBoezhi222RKIAZhNfFS-kj2vXuPfumtA2HyT6Z8VY_ieEf644VJqvApsSYiuYzCtBPiSR7SOt4oTw=w736-h552-s-no-gm?authuser=0")
+  emailVerified         DateTime?               @default(now()) // تحديد القيمة الافتراضية لحقل emailVerified
+  image                 String?                @default("https://lh3.googleusercontent.com/pw/ABLVV87_rW0vm7TUWM8tKBU2mM-bTZjljfRPNkrC-UH93PmAObq8zK5McFfztvSeNySiKugH-l7eFxu0rBoezhi222RKIAZhNfFS-kj2vXuPfumtA2HyT6Z8VY_ieEf644VJqvApsSYiuYzCtBPiSR7SOt4oTw=w736-h552-s-no-gm?authuser=0")
   password              String?
+  createdAt             DateTime               @default(now())
+  updatedAt             DateTime               @updatedAt
   role                  UserRole               @default(USER)
   isTwoFactorEnabled    Boolean                @default(false)
   twoFactorConfirmation TwoFactorConfirmation?

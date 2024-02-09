@@ -13,8 +13,9 @@ interface Profile {
   // add any other fields you expect from the API response
 }
 
+
 async function getPostsDataById(postId: string): Promise<Profile> {
-  const res = await fetch(`https://rsalaco.vercel.app/api/posts/${postId}`, {
+  const res = await fetch(`http://localhost:3000/api/posts/${postId}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -35,16 +36,13 @@ const U: React.FC<{ params: { slug: string } }> = ({ params }) => {
     fetchData();
   }, [params.slug]);
 
-  
-  if (profiles === null) {    
+  if (profiles === null) {
     return <Loading_user />;
   }
-  
-    if (profiles?.username == null) {
-  
-      return (
-        <NotFound_user />
-      );}
+
+  if (profiles?.username == null) {
+    return <NotFound_user />;
+  }
 
   return (
     <main className="mx-5">
@@ -82,14 +80,21 @@ const U: React.FC<{ params: { slug: string } }> = ({ params }) => {
           </div>
 
           <div className="">
-            <textarea
-              name="textarea"
-              placeholder="Enter massages"
-              className="bg-gray-200 h-32 mt-3 p-3 rounded-md w-full outline-none flex jc"
-            />
-            <Button className="bg-[#101010] hover:bg-[#303030] w-32 text-lg mt-2">
-              Send
-            </Button>
+            <form action="" method="post">
+              <textarea
+                name="content"
+                placeholder="Enter massages"
+                className="bg-gray-200 h-32 mt-3 p-3 rounded-md w-full outline-none flex jc"
+              ></textarea>
+              <input type="text" name="senderId" />
+              <input type="text" name="receiverId" />
+              <Button
+                type="submit"
+                className="bg-[#101010] hover:bg-[#303030] w-32 text-lg mt-2"
+              >
+                Send
+              </Button>
+            </form>
           </div>
         </div>
       </div>
