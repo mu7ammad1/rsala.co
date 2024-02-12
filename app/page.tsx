@@ -20,7 +20,7 @@ export default async function Home() {
   const session = await auth();
   if (session?.user) {
     return (
-      <main className="flex h-full flex-col items-center justify-center bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-sky-400 to-blue-800">
+      <main className="flex h-screen flex-col items-center justify-center bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-sky-400 to-blue-800">
         <Link href={`/settings`}>
           <Button>Go Setting</Button>
         </Link>
@@ -28,7 +28,7 @@ export default async function Home() {
     );
   } else {
     return (
-      <main className="flex flex-col items-center justify-center bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-sky-400 to-blue-800">
+      <main className="flex flex-col h-full items-center justify-center bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-sky-400 to-blue-800">
         <div className={`space-y-6 text-center`}>
           <div className="flex flex-row items-center justify-center w-full max-sm:grid">
             <div className=" flex justify-center items-center w-full">

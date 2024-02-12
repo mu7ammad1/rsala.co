@@ -4,7 +4,7 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 
 import { db } from "@/lib/db";
 import authConfig from "@/auth.config";
-import { getUserById } from "@/data/user";
+import { getUserById} from "@/data/user";
 import { getTwoFactorConfirmationByUserId } from "@/data/two-factor-confirmation";
 import { getAccountByUserId } from "./data/account";
 
@@ -65,9 +65,11 @@ export const {
       if (session.user) {
         session.user.username = token.username as string;
       }
+
       if (session.user) {
         session.user.bio = token.bio as string;
       }
+
       if (session.user) {
         session.user.name = token.name;
         session.user.email = token.email;
@@ -90,6 +92,7 @@ export const {
       token.isOAuth = !!existingAccount;
       token.name = existingUser.name;
       token.username = existingUser.username;
+      token.bio = existingUser.bio;
       token.email = existingUser.email;
       token.role = existingUser.role;
       token.isTwoFactorEnabled = existingUser.isTwoFactorEnabled;
