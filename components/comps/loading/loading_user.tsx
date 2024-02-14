@@ -1,6 +1,6 @@
 export default function Loading_user() {
   return (
-    <main className="flex justify-center items-center">
+    <main className="pt-5 flex justify-center items-center">
       <div className="w-[700px] bg-300  m-5 p-2">
         <div className="animate-pulse">
           <div className="flex flex-row ">

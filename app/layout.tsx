@@ -1,17 +1,22 @@
 import { Analytics } from "@vercel/analytics/react";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Poppins } from "next/font/google";
 import { SessionProvider } from "next-auth/react";
 import { auth } from "@/auth";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
-
+import Navbar from "@/components/comps/Navbar/Navbar";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Rsala",
   description: "Rsala home",
 };
+
+const font = Poppins({
+  subsets: ["latin"],
+  weight: ["700"],
+});
 
 export default async function RootLayout({
   children,
@@ -22,9 +27,10 @@ export default async function RootLayout({
 
   return (
     <SessionProvider session={session}>
-      <html lang="en">
+      <html lang="ar">
         <body className={inter.className}>
           <Toaster />
+          <Navbar />
           {children}
           <Analytics />
         </body>

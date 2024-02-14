@@ -2,26 +2,30 @@ import Image from "next/image";
 import Logo from "@/assets/Rsala.svg";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { Social } from "@/components/auth/social";
+import { LoginButton } from "@/components/auth/login-button";
 
 export default function Navbar() {
   return (
-    <main className="m-5 px-5 bg-blue-500">
-      <div className="flex flex-row px-5 py-0 bg-blue-500">
-        <div className="basis-1/2 flex justify-start py-0 px-5">
-          <Link href={`/`}>
-            <Image src={Logo} alt="rsala.co" width={150} />
+    <main className="absolute w-full">
+      <div className="px-5 py-2   *:font-normal *:text-sm flex justify-between items-center">
+        <div className="flex gap-5">
+          <Link
+            href={"/privacy-policy"}
+            className=" text-xl decoration-slice decoration-1 underline-offset-8 capitalize hover:underline "
+          >
+            RSALA.co
           </Link>
         </div>
-        <div className="basis-1/2 justify-end flex items-center space-x-2 px-5">
-          <Link href={`/settings`}>
-            <Button className="text-base bg-white shadow-none hover:bg-white text-black *:hover:text-blue-500 "><p className="*:hover:text-blue-500 ">Who we</p></Button>
-          </Link>
-          <Link href={`/settings`}>
-            <Button className="text-base bg-white shadow-none hover:bg-white text-black *:hover:text-blue-500 "><p className="*:hover:text-blue-500 ">Privacy</p></Button>
-          </Link>
-          <Link href={`/settings`}>
-            <Button className="text-base bg-white shadow-none hover:bg-white text-black *:hover:text-blue-500 "><p className="*:hover:text-blue-500 ">Help</p></Button>
-          </Link>
+        <div className="flex gap-5">
+          <LoginButton mode="modal" asChild>
+            <Button
+              variant="secondary"
+              className="px-10  text-lg py-5 rounded-full"
+            >
+              تسجيل الدخول
+            </Button>
+          </LoginButton>
         </div>
       </div>
     </main>

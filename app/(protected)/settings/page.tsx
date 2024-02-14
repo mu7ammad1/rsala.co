@@ -80,7 +80,7 @@ const SettingsPage = () => {
   return (
     <>
       {user != null ? (
-        <Card className="w-[600px] h-full">
+        <Card className="w-[600px]">
           <CardHeader>
             <div className="flex justify-between items-center">
               <div className="basis-14">

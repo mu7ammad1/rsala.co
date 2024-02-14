@@ -10,7 +10,10 @@ export const GET = async (request, { params }) => {
       where: {
         username: id,
       },
-      include: { receivedMessages: true, sentMessages: true },
+      include: {
+        receivedMessages: true,
+        sentMessages: true,
+      },
     });
     if (!user) {
       return NextResponse.json(
@@ -31,13 +34,43 @@ export const GET = async (request, { params }) => {
 export const POST = async (request) => {
   try {
     const body = await request.json();
-    const { content, senderId, receiverId } = body;
+    const {
+      content,
+      senderId,
+      receiverId,
+      senderUsernameId,
+      img1,
+      img2,
+      img3,
+      img4,
+      img5,
+      img6,
+      img7,
+      img8,
+      img9,
+      img10,
+      img11,
+      img12,
+    } = body;
 
     const newMessage = await db.message.create({
       data: {
         content,
         senderId,
         receiverId,
+        senderUsernameId,
+        img1,
+        img2,
+        img3,
+        img4,
+        img5,
+        img6,
+        img7,
+        img8,
+        img9,
+        img10,
+        img11,
+        img12,
       },
     });
 
@@ -45,23 +78,23 @@ export const POST = async (request) => {
   } catch (error) {
     return NextResponse.json({ message: "POST ERROR", error }, { status: 500 });
   }
-}
+};
 // هنا حذف الحساب فقط
 export const DELETE = async (request, { params }) => {
-    try {
-        const { id } = params;
+  try {
+    const { id } = params;
 
-        // حذف المستخدم بشكل مباشر
-        await db.user.delete({
-            where: {
-                username: id
-            }
-        });
+    // حذف المستخدم بشكل مباشر
+    await db.user.delete({
+      where: {
+        username: id,
+      },
+    });
 
-        // إرجاع استجابة بنجاح
-        return NextResponse.json({ message: "User deleted successfully" });
-    } catch (error) {
-        // تجاهل الخطأ الناتج من عدم وجود رسائل مرتبطة
-        return NextResponse.json({ message: "User deleted Erorr" });
-    }
+    // إرجاع استجابة بنجاح
+    return NextResponse.json({ message: "User deleted successfully" });
+  } catch (error) {
+    // تجاهل الخطأ الناتج من عدم وجود رسائل مرتبطة
+    return NextResponse.json({ message: "User deleted Erorr" });
+  }
 };

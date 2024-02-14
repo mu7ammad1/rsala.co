@@ -6,8 +6,9 @@ export default function Tabs_Message({ username }: any) {
   return (
     <Tabs defaultValue="account" className="w-full">
       <TabsList className="w-full flex flex-row">
-        <TabsTrigger value="account" className="basis-1/2">Received</TabsTrigger>
-        <TabsTrigger value="password" className="basis-1/2">Sent</TabsTrigger>
+        <TabsTrigger value="account" className="basis-1/2">مستقبله</TabsTrigger>
+        <TabsTrigger value="password" className="basis-1/2">مرسله</TabsTrigger>
+        <TabsTrigger value="liked" className="basis-1/2">مفضله</TabsTrigger>
       </TabsList>
       <TabsContent value="account">
         {/* Received */}
@@ -17,6 +18,11 @@ export default function Tabs_Message({ username }: any) {
         {/* Sent */}
         <SentMessages slug={username} />
       </TabsContent>
+      <TabsContent value="liked">
+        {/* liked */}
+        <SentMessages slug={username} />
+      </TabsContent>
+
     </Tabs>
   );
 }

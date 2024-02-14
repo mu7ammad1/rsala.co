@@ -1,10 +1,10 @@
-import { Poppins } from "next/font/google";
+import { Playfair_Display } from "next/font/google";
 
 import { cn } from "@/lib/utils";
 
-const font = Poppins({
-  subsets: ["latin"],
-  weight: ["600"],
+const font = Playfair_Display({
+  subsets: ["vietnamese"],
+  weight: ["800"],
 });
 
 interface HeaderProps {
@@ -17,10 +17,10 @@ export const Header = ({
   return (
     <div className="w-full flex flex-col gap-y-4 items-center justify-center">
       <h1 className={cn(
-        "text-3xl font-semibold",
+        "text-4xl font-semibold",
         font.className,
       )}>
-        ❤️ Rsala.co
+        Rsala.co
       </h1>
       <p className="text-muted-foreground text-sm">
         {label}
