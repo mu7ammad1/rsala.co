@@ -245,6 +245,9 @@ const SettingsPage = () => {
             </div>
           </CardHeader>
           <CardContent className="grid grid-cols-1">
+              <p>Share : https://rsalaco.vercel.app/{user.username}</p>
+          </CardContent>
+          <CardContent className="grid grid-cols-1">
             <Tabs_Message username={user.username} />
           </CardContent>
         </Card>

@@ -1,14 +1,16 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import Loading_user from "@/components/comps/loading/loading_user";
 import NotFound_user from "@/components/comps/NotFound/NotFound_user";
 import axios from "axios";
-import { Toaster } from "@/components/ui/toaster";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { GoHeartFill } from "react-icons/go";
 import { LuReply } from "react-icons/lu";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Toaster } from "@/components/ui/toaster";
+import { Switch } from "@/components/ui/switch";
+import { toast } from "@/components/ui/use-toast";
 
 interface Profile {
   id: any;
@@ -44,53 +46,8 @@ async function getPostsDataById(postId: string): Promise<Profile> {
 }
 
 const U: React.FC<{ params: { slug: string } }> = ({ params }) => {
-
   const user = useCurrentUser();
   const [profiles, setProfiles] = useState<Profile | null>(null);
-
- 
-
-  
-    const bbbb = user?.username || "rsala";
-    const cccc = user?.id || "rsala";
-    const aaaa = profiles?.id
-    const [formData, setFormData] = useState({
-      content: "",
-      img1: null,
-      img2: null,
-      img3: null,
-      img4: null,
-      img5: null,
-      img6: null,
-      img7: null,
-      img8: null,
-      img9: null,
-      img10: null,
-      img11: null,
-      img12: null,
-      senderId: `${cccc}` || user?.id,
-      senderUsernameId: user?.username || `${bbbb}`,
-      receiverId: `${aaaa}` || profiles?.id,
-    });
-
-  const handleChange = (event: { target: { name: any; value: any } }) => {
-    const { name, value } = event.target;
-    setFormData({ ...formData, [name]: value });
-  };
-
-  const handleSubmit = async (event: { preventDefault: () => void }) => {
-    event.preventDefault();
-    try {
-      const response = await axios.post("/api/posts", formData);
-      console.log(response.data);
-    } catch (error) {
-      console.error("Error sending message:", error);
-    }
-  };
-
-
-  
-
   useEffect(() => {
     const fetchData = async () => {
       const data = await getPostsDataById(params.slug);
@@ -99,6 +56,75 @@ const U: React.FC<{ params: { slug: string } }> = ({ params }) => {
 
     fetchData();
   }, [params.slug]);
+
+  const defaultReceiverId = profiles?.id;
+
+  const [inputs, setInputs] = useState({
+    content: "",
+    receiverId: defaultReceiverId,
+    senderId: "",
+    senderUsernameId: "",
+  });
+  const [isChecked, setIsChecked] = useState(false);
+  const [isUserExists, setIsUserExists] = useState(false);
+  const [showMessage, setShowMessage] = useState(false);
+
+  useEffect(() => {
+    setIsUserExists(!!user);
+    setIsChecked(!user);
+  }, [user]);
+
+  const handleSubmit = (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+    const { content, receiverId } = inputs;
+    const senderId = isChecked || !isUserExists ? "مجهول" : user?.id || "";
+    const senderUsernameId =
+      isChecked || !isUserExists ? "مجهول" : user?.username || "";
+
+    axios
+      .post("https://rsalaco.vercel.app/api/posts", {
+        content,
+        receiverId,
+        senderId,
+        senderUsernameId,
+      })
+      .then((res) => {
+        setShowMessage(true);
+        toast({
+          title: "The message was sent successfully",
+        });
+
+        setTimeout(() => {
+          setShowMessage(false);
+        }, 3000);
+        console.log(res.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+      .finally(() => {
+        setInputs({
+          content: "",
+          receiverId: defaultReceiverId,
+          senderId: "",
+          senderUsernameId: "",
+        });
+      });
+  };
+
+  const handleChange = (e: { target: { name: any; value: any } }) => {
+    const name = e.target.name;
+    const value = e.target.value;
+
+    setInputs((prevState) => ({ ...prevState, [name]: value }));
+  };
+
+  // const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   setIsChecked(e.target.checked);
+  // };
+  const handleCheckboxChange = (checked: boolean) => {
+    setIsChecked(checked);
+  };
 
   if (profiles === null) {
     return <Loading_user />;
@@ -165,7 +191,7 @@ const U: React.FC<{ params: { slug: string } }> = ({ params }) => {
               <div className="w-full">
                 <textarea
                   name="content"
-                  value={formData.content}
+                  value={inputs.content}
                   onChange={handleChange}
                   placeholder="Whay, Who, Love you......."
                   className="w-full h-32  rounded-lg  border border-[#101010] focus-within:border-emerald-600 p-3 outline-none"
@@ -173,35 +199,47 @@ const U: React.FC<{ params: { slug: string } }> = ({ params }) => {
                 />
               </div>
             </div>
-            <div className="flex items-center w-full mt-6">
+            <div className="flex items-center w-full mt-1">
               <input
                 type="text"
                 name="senderId"
-                placeholder="Sender ID "
-                value={formData.senderId || ""}
+                placeholder="senderId"
+                value={isChecked || !isUserExists ? "مجهول" : user?.id || ""}
                 onChange={handleChange}
                 className="hidden"
               />
               <input
                 type="text"
                 name="senderUsernameId"
-                placeholder="Sender Username ID"
-                value={formData.senderUsernameId || ""}
+                placeholder="senderUsernameId"
+                value={
+                  isChecked || !isUserExists ? "مجهول" : user?.username || ""
+                }
                 onChange={handleChange}
                 className="hidden"
               />
               <input
                 type="text"
                 name="receiverId"
-                placeholder="Receiver ID"
-                className="hidden"
-                value={formData.receiverId || aaaa }
+                placeholder="receiverId"
+                value={(inputs.receiverId = defaultReceiverId)}
                 onChange={handleChange}
+                className="hidden"
                 required
               />
-              <h1>{profiles.id}</h1>
+              {showMessage && <div>تم</div>}
             </div>
-            <div className="flex items-center w-full mt-0">
+            <div className="flex items-center justify-between w-full">
+              <div className="flex items-center">
+                <Switch
+                  checked={isChecked}
+                  onCheckedChange={handleCheckboxChange}
+                  disabled={!isUserExists}
+                  aria-readonly
+                />
+                {isChecked ? <span className="font-medium text-lg mx-2">مجهول</span> : "غير مجهول"}
+              </div>
+
               <div className=" bg-gray-200 rounded-lg dark:bg-gray-700 w-32">
                 <Toaster />
                 <Button
@@ -209,7 +247,7 @@ const U: React.FC<{ params: { slug: string } }> = ({ params }) => {
                   variant="outline"
                   type="submit"
                 >
-                  Send
+                  إرسال
                 </Button>
               </div>
             </div>
@@ -252,21 +290,51 @@ const U: React.FC<{ params: { slug: string } }> = ({ params }) => {
                       </div>
                     </div>
                   ))}
-              {/* 
-              {profiles.sentMessages &&
-                profiles.sentMessages
-                  .filter((message) => message.isPublic === true)
-                  .map((message) => (
-                    <div key={message.id}>
-                      <p>Sent Message: {message.content}</p>
-                      <p>To: {message.senderId}</p>
-                      <p>Created At: {message.createdAt}</p>
-                    </div>
-                  ))} */}
             </div>
           </div>
         </div>
       </div>
+      {/* <div>
+        <form className="pt-52 grid" onSubmit={handleSubmit}>
+          <input
+            type="text"
+            name="content"
+            placeholder="content"
+            value={inputs.content}
+            onChange={handleChange}
+          />
+          <input
+            type="text"
+            name="receiverId"
+            placeholder="receiverId"
+            value={(inputs.receiverId = defaultReceiverId)}
+            onChange={handleChange}
+          />
+          <input
+            type="text"
+            name="senderId"
+            placeholder="senderId"
+            value={isChecked || !isUserExists ? "مجهول" : user?.id || ""}
+            onChange={handleChange}
+          />
+          <input
+            type="text"
+            name="senderUsernameId"
+            placeholder="senderUsernameId"
+            value={isChecked || !isUserExists ? "مجهول" : user?.username || ""}
+            onChange={handleChange}
+          />
+          <input
+            type="checkbox"
+            checked={isChecked}
+            onChange={handleCheckboxChange}
+            disabled={!isUserExists}
+          />
+
+          <input type="submit" value="submit" />
+        </form>
+        {showMessage && <div>تم</div>}
+      </div> */}
     </main>
   );
 };
