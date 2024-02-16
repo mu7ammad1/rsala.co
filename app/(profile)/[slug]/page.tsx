@@ -8,11 +8,12 @@ import { GoHeartFill } from "react-icons/go";
 import { LuReply } from "react-icons/lu";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Toaster } from "@/components/ui/toaster";
 import { Switch } from "@/components/ui/switch";
-import { toast } from "@/components/ui/use-toast";
+import { toast } from "sonner";
+import { Toaster } from "@/components/ui/sonner";
 
 interface Profile {
+  [x: string]: any;
   id: any;
   image: string;
   name: string;
@@ -47,7 +48,10 @@ async function getPostsDataById(postId: string): Promise<Profile> {
 
 const U: React.FC<{ params: { slug: string } }> = ({ params }) => {
   const user = useCurrentUser();
+
   const [profiles, setProfiles] = useState<Profile | null>(null);
+  const [isFollowing, setIsFollowing] = useState<boolean>(false);
+
   useEffect(() => {
     const fetchData = async () => {
       const data = await getPostsDataById(params.slug);
@@ -74,6 +78,21 @@ const U: React.FC<{ params: { slug: string } }> = ({ params }) => {
     setIsChecked(!user);
   }, [user]);
 
+  
+
+  useEffect(() => {
+    if (!user || !profiles) return;
+
+    if (profiles.followers && user) {
+      const isUserFollowing = profiles.followers.some(
+        (follower: { id: string }) => follower.id === user.id
+      );
+      setIsFollowing(isUserFollowing);
+    }
+  }, [user, profiles]);
+
+
+
   const handleSubmit = (e: { preventDefault: () => void }) => {
     e.preventDefault();
     const { content, receiverId } = inputs;
@@ -82,7 +101,7 @@ const U: React.FC<{ params: { slug: string } }> = ({ params }) => {
       isChecked || !isUserExists ? "مجهول" : user?.username || "";
 
     axios
-      .post("https://rsalaco.vercel.app/api/posts", {
+      .post(`https://rsalaco.vercel.app/api/posts`, {
         content,
         receiverId,
         senderId,
@@ -90,9 +109,7 @@ const U: React.FC<{ params: { slug: string } }> = ({ params }) => {
       })
       .then((res) => {
         setShowMessage(true);
-        toast({
-          title: "The message was sent successfully",
-        });
+        toast("Event has been created.");
 
         setTimeout(() => {
           setShowMessage(false);
@@ -112,6 +129,49 @@ const U: React.FC<{ params: { slug: string } }> = ({ params }) => {
       });
   };
 
+  const handleUnfollow = () => {
+    if (!user || !profiles) return;
+
+    const { id: receiverId } = profiles;
+    const senderId = isChecked || !isUserExists ? "مجهول" : user?.id || "";
+
+    axios
+      .delete(`https://rsalaco.vercel.app/api/follow`, {
+        data: {
+          followerId: senderId,
+          followingId: receiverId,
+        },
+      })
+      .then((res) => {
+        setShowMessage(true);
+        console.log(res.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const handleSubmitFollow = () => {
+    if (!user || !profiles) return;
+
+    const { id: receiverId } = profiles.id
+    const senderId = isChecked || !isUserExists ? "مجهول" : user?.id || "";
+
+    axios
+      .post(`https://rsalaco.vercel.app/api/follow/${profiles.id}`, {
+        followerId: senderId,
+        followingId: receiverId,
+      })
+      .then((res) => {
+        setShowMessage(true);
+        console.log(res.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+
   const handleChange = (e: { target: { name: any; value: any } }) => {
     const name = e.target.name;
     const value = e.target.value;
@@ -119,9 +179,6 @@ const U: React.FC<{ params: { slug: string } }> = ({ params }) => {
     setInputs((prevState) => ({ ...prevState, [name]: value }));
   };
 
-  // const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   setIsChecked(e.target.checked);
-  // };
   const handleCheckboxChange = (checked: boolean) => {
     setIsChecked(checked);
   };
@@ -135,7 +192,7 @@ const U: React.FC<{ params: { slug: string } }> = ({ params }) => {
   }
 
   return (
-    <main className="pt-5 flex justify-center items-center">
+    <main className="flex justify-center items-center">
       <div className="min-w-[600px] bg-300  my-10">
         <div className="">
           <div className="flex flex-row items-center">
@@ -177,13 +234,46 @@ const U: React.FC<{ params: { slug: string } }> = ({ params }) => {
               {/* <p>https://rsala.co/muhammad</p> */}
             </div>
           </div>
-          <div className="flex items-center space-x-3 w-full mt-4">
-            <div className="h-10 bg-[#101010] rounded-lg dark:bg-gray-700 w-full flex justify-center items-center text-lg font-normal text-white">
+          <div className="flex items-center w-full mt-4">
+            {/* <div className="h-10 bg-[#101010] rounded-lg dark:bg-gray-700 w-full flex justify-center items-center text-lg font-normal text-white">
               Follow
-            </div>
-            <div className="h-10 bg-[#101010] rounded-lg dark:bg-gray-600 w-full flex justify-center items-center text-lg font-normal text-white">
-              Share Profile
-            </div>
+            </div> */}
+            {/* {isFollowing ? (
+              "تمت المتابعة"
+            ) : (
+              <Button onClick={handleSubmitFollow}>متابعة</Button>
+            )}
+            <div className="h-10 bg-[#101010] rounded-lg dark:bg-gray-700 w-full flex justify-center items-center text-lg font-normal text-white">
+              <Button onClick={handleUnfollow}>unfollow</Button>
+            </div> */}
+            {/* {isFollowing ? (
+              <div className="h-10 bg-[#101010] rounded-lg dark:bg-gray-700 w-full flex justify-center items-center text-lg font-normal text-white">
+                <Button onClick={handleUnfollow}>unfollow</Button>
+              </div>
+            ) : (
+              <Button onClick={handleSubmitFollow}>متابعة</Button>
+            )} */}
+
+            {isFollowing ? (
+              <div className="flex items-center w-full mt-4">
+                <div className="h-10 bg-[#101010] rounded-lg dark:bg-gray-700 w-full flex justify-center items-center text-lg font-normal text-white">
+                  <Button onClick={handleUnfollow}>unfollow</Button>
+                </div>
+              </div>
+            ) : (
+              <div className="flex items-center w-full mt-4">
+                <Button onClick={handleSubmitFollow}>متابعة</Button>
+              </div>
+            )}
+            {isFollowing}
+
+            {/* <Button
+              className="h-full hover:bg-emerald-600 text-white hover:text-white bg-[#101010] rounded-lg  w-full"
+              variant="outline"
+              onClick={handleSubmitFollow} // استخدم onClick بدلاً من onSubmit
+            >
+              Follow
+            </Button> */}
           </div>
 
           <form onSubmit={handleSubmit}>
@@ -237,7 +327,11 @@ const U: React.FC<{ params: { slug: string } }> = ({ params }) => {
                   disabled={!isUserExists}
                   aria-readonly
                 />
-                {isChecked ? <span className="font-medium text-lg mx-2">مجهول</span> : "غير مجهول"}
+                {isChecked ? (
+                  <span className="font-medium text-lg mx-2">مجهول</span>
+                ) : (
+                  "غير مجهول"
+                )}
               </div>
 
               <div className=" bg-gray-200 rounded-lg dark:bg-gray-700 w-32">

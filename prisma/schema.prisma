@@ -17,10 +17,10 @@ model User {
   id                    String                 @id @default(cuid()) @map("_id")
   name                  String                 @default(cuid())
   username              String?                @unique @default(cuid()) @db.String
-  bio                   String                 @default("hello bio")
+  bio                   String                 @default("")
   email                 String                 @unique
   emailVerified         DateTime?              @default(now()) // تحديد القيمة الافتراضية لحقل emailVerified
-  image                 String?                @default("https://cdn.pixabay.com/photo/2023/11/07/15/31/red-panda-8372704_1280.jpg")
+  image                 String?                @default("https://lh3.googleusercontent.com/pw/ABLVV86BgoNStBUlaKF2FRpbDg9x5spfRn7Gvk_k379VDLNonRh7RVDyId6n4ri1xF5s5f8G9CByYEP-J8CrfR6xXpCtwEQmVinA3DT6xxB7GBbDG1rwSMkkyrujroyECLaLFSAQrFPqr1sHHV_pssgxET9HNo4HUrbnJx7iS7FAQsFiN1ywB5b5Q1XdR6TU_yevTKrN_Ky34AwOV9NmVEx962S49NnsE7Kx_Gc19rzcn6yRMUp6VqWVWzgtHL_mQz0F_S1zIaRFnAWBeeiUgXMs-2DoIhmSmI_jK2DDArB9u7ewzf-bfGd4HLwzsT-f2UBBSZHA71fZHNLj4che53Q_E2zfK_ZRvxM1gMrnRv0MVORkP0svUFrrQQ69vnCOioGyKeMedr8qG8Ot0bbOedW1c2LVYpgr96T_qSByU18yWY39c7KIPqN3YvJtaeSMM9mXN6J3hKpRN8tbAKELwG1ZreaZtmj3tJTEW2Mo3dsp8aOmiCCpaZrXiwvxyWIm3V3Lnhf172C2Xzki9p7l1t_bor8B4i869ZDNonUjT71-XARQbIc-ZttQjP8oqu7LSeIxlqo0388Q-PKc5eDRRNoWDOMiLS7yzqwo2X_JQx3mI3P5P-vTuv3GufUYULGZXUAPdbF1h_nVElxANCzRYEyxJOPfKsqrIugQ3-uHF8FxZ2GbJ0WykQptM8Ma5nCv1p8beP4NieiyRYM8vdxz5oGRTR3wvEPN1h2UKGSF209KwV0IkLAFLKZSFf3myCoxLsakHdWtYjgQ6swT9fgv4IxFMUkFzmva-zOhJRbK4IbpyihAy7GBhsC_Gbx-hGs8ub9bdxrBE7lnfxgpkGp6JEcoj9wfQsPIB4wbD-PpJz1czoeaLcKVpaYPXb9CNtt6PyYVETgZSaP4kmXIUH4kcKLfReUF4VFBCdt8IfBA6hKPO4_NJLDjzs1HUL_wuyM=w852-h639-s-no-gm?authuser=0")
   password              String?
   createdAt             DateTime               @default(now())
   updatedAt             DateTime               @updatedAt
@@ -39,13 +39,14 @@ model User {
 
 model Follow {
   id          String @id @default(cuid()) @map("_id")
-  follower    User   @relation("FollowerRelation", fields: [followerId], references: [id])
-  followerId  String
-  following   User   @relation("FollowingRelation", fields: [followingId], references: [id])
-  followingId String
+  follower    User   @relation("FollowerRelation", fields: [followerUsername], references: [username])
+  followerUsername  String @db.String
+  following   User   @relation("FollowingRelation", fields: [followingUsername], references: [username])
+  followingUsername String @db.String
 
-  @@unique([followerId, followingId])
+  @@unique([followerUsername, followingUsername])
 }
+
 
 model Message {
   id               String   @id @default(cuid()) @map("_id")

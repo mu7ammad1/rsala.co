@@ -11,7 +11,7 @@ import Image from "next/image";
 import img1 from "@/assets/2299884_lovemessage.png";
 import { FaFacebook } from "react-icons/fa";
 import { Social } from "@/components/auth/social";
-import image from "@/assets/2299884_lovemessage.png";
+import AccordionSingle from "@/components/comps/Accordion/Accordionsingle";
 
 const rubik = Rubik({
   subsets: ["arabic"],
@@ -30,12 +30,14 @@ export default async function Home() {
     );
   } else {
     return (
-      <main className={rubik.className + `pt-5`}>
+      <main className={cn("-5 ", rubik.className)}>
         <div className="cover flex flex-col items-center bg-cover bg-no-repeat bg-center object-center h-full py-10 *:text-center *:font-normal">
-          <h1 className="text-5xl font-semibold text-white my-12">
+          <h1 className="text-5xl font-semibold text-white mt-12 mb-5">
             ارسل رسالة بشكل مجهول
           </h1>
-
+          <h1 className="text-xl font-semibold text-white mb-12 mt-2">
+            رساله يساعدك في الحصول على نقد بناء مع المحافظة على سرية هوية الناقد
+          </h1>
           <div className="my-8">
             <LoginButton mode="modal" asChild>
               <Button
@@ -48,17 +50,13 @@ export default async function Home() {
           </div>
           <div className=" space-y-5 my-10 *:rounded-full">
             <h1 className="text-2xl font-medium text-white ">تسجيل مباشر</h1>
-            <Social  />
+            <Social />
           </div>
         </div>
 
-
-
         {/* Hidden elememt */}
-        <div className="py-10 bg-emerald-500">
-          <h1 className="text-center text-base mb-5">
-            Get the app
-          </h1>
+        <div className="py-10 bg-emerald-500 hidden">
+          <h1 className="text-center text-base mb-5">Get the app</h1>
           <div className="flex justify-center items-center gap-5">
             <Button variant="secondary" size="lg" className="gap-5">
               <FaGooglePlay className="text-xl" />
@@ -71,37 +69,32 @@ export default async function Home() {
           </div>
         </div>
 
-
-
-        <div className="px-5 py-2 bg-yellow-500  static bottom-0 *:font-normal *:text-sm flex justify-between items-center">
-          <div className="flex gap-5">
-            <Link
-              href={"/privacy-policy"}
-              className="decoration-slice decoration-1 underline-offset-8 capitalize hover:underline "
-            >
-              privacy policy
-            </Link>
-            <Link
-              href={"/about"}
-              className="hidden decoration-slice decoration-1 underline-offset-8 capitalize hover:underline "
-            >
-               about Rsala
-            </Link>
-
-            <Link
-              href={"/terms"}
-              className="hidden decoration-slice decoration-1 underline-offset-8 capitalize hover:underline "
-            >
-              Terms of use
-            </Link>
-            <Link
-              href={"/contact"}
-              className="decoration-slice decoration-1 underline-offset-8 capitalize hover:underline "
-            >
-              Contact us
-            </Link>
+        <div className="py-10 bg-amber-500 hidden">
+          <h1 className="text-center text-base mb-5">Get the app</h1>
+          <div className="flex justify-center items-center gap-5">
+            <Button variant="secondary" size="lg" className="gap-5">
+              <FaGooglePlay className="text-xl" />
+              <span>Google Play</span>
+            </Button>
+            <Button variant="secondary" size="lg" className="gap-5">
+              <IoLogoAppleAppstore className="text-xl" />
+              <span>Apple Store</span>
+            </Button>
           </div>
-          <h1 className="text-center text-base">🍉🍉 ❤️ صنع في مصر</h1>
+        </div>
+
+        <div className="flex justify-center items-center bg-emerald-500">
+          <div className="w-[500px] max-md:w-full max-md:mx-16 max-sm:mx-5 my-10">
+            <h1
+              className={cn(
+                "text-3xl font-semibold text-center py-5 ",
+                rubik.className
+              )}
+            >
+              اسئلة شائعة
+            </h1>
+            <AccordionSingle />
+          </div>
         </div>
       </main>
     );

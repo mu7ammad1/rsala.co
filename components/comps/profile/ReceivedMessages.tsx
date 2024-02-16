@@ -42,6 +42,10 @@ export default function ReceivedMessages(params: { slug: any }) {
       const data = await getPostsDataById(params.slug);
       setProfiles(data);
     };
+    fetchData(); // Fetch data initially
+    const interval = setInterval(fetchData, 5000); // Fetch data every 5 seconds
+    return () => clearInterval(interval); // Cleanup interval on component unmount
+
 
     fetchData();
   }, [params.slug]);
@@ -50,17 +54,25 @@ export default function ReceivedMessages(params: { slug: any }) {
     return <div>Loading...</div>;
   }
 
+  // ترتيب الرسائل حسب التاريخ بتنازلي
+  const sortedMessages = profiles.receivedMessages.sort((a, b) => {
+    const dateA = new Date(a.createdAt).getTime();
+    const dateB = new Date(b.createdAt).getTime();
+    return dateB - dateA;
+  });
+
   return (
-    <div>
-      <div className="flex justify-center items-center">
-        <div className="w-full space-y-3">
-          {profiles.receivedMessages &&
-            profiles.receivedMessages.map((message) => (
-              <div key={message.id}>
-                <ViewMessages rsala={message.content} username={message.senderUsernameId} picture={message.id} />
-              </div>
-            ))}
-        </div>
+    <div className="flex justify-center items-center">
+      <div className="w-full space-y-3">
+        {sortedMessages.map((message) => (
+          <div key={message.id}>
+            <ViewMessages
+              rsala={message.content}
+              username={message.senderUsernameId}
+              picture={message.id}
+            />
+          </div>
+        ))}
       </div>
     </div>
   );

@@ -3,9 +3,10 @@
 import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useTransition, useState, useEffect } from "react";
+import { useTransition, useState, useEffect, SetStateAction } from "react";
 import { useSession } from "next-auth/react";
 import { LoginButton } from "@/components/auth/login-button";
+import { CopyToClipboard } from "react-copy-to-clipboard";
 
 import { SettingsSchema } from "@/schemas";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
@@ -37,7 +38,8 @@ import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
 import { UserRole } from "@prisma/client";
 import { UserButton } from "@/components/auth/user-button";
-import Profile_Settings from "@/components/comps/profile/settings";
+import { IoIosCopy } from "react-icons/io";
+import { IoIosDoneAll  } from "react-icons/io";
 import Tabs_Message from "@/components/comps/profile/Tabs_Messsage";
 
 const SettingsPage = () => {
@@ -77,11 +79,26 @@ const SettingsPage = () => {
     });
   };
 
+  const [copied, setCopied] = useState(false);
+  const [showMessage, setShowMessage] = useState(false);
+  const textToCopy = `https://rsalaco.vercel.app/${user?.username}`;
+
+  const handleCopy = () => {
+    setCopied(true);
+    setShowMessage(true);
+
+    // بعد 3 ثوانٍ، قم بإخفاء الرسالة
+    setTimeout(() => {
+      setShowMessage(false);
+      setCopied(false);
+    }, 3000);
+  };
+
   return (
     <>
       {user != null ? (
         <Card className="w-[600px]">
-          <CardHeader>
+          <CardHeader className="py-2 pt-4">
             <div className="flex justify-between items-center">
               <div className="basis-14">
                 <UserButton />
@@ -145,6 +162,7 @@ const SettingsPage = () => {
                                       placeholder="username"
                                       defaultValue={user?.username}
                                       disabled={isPending}
+                                      className="lowercase"
                                     />
                                   </FormControl>
                                   <FormMessage />
@@ -242,25 +260,37 @@ const SettingsPage = () => {
                   </DrawerFooter>
                 </DrawerContent>
               </Drawer>
+              
             </div>
           </CardHeader>
-          <CardContent className="grid grid-cols-1">
-              <p>Share : https://rsalaco.vercel.app/{user.username}</p>
+          <CardContent className="py-2">
+            <div className="flex justify-between items-center space-x-2">
+              <h1 className="p-2 px-4 rounded-lg w-full  bg-gray-100">{textToCopy}</h1>
+              <CopyToClipboard text={textToCopy} onCopy={handleCopy}>
+
+                <button className="p-3 bg-gray-200 rounded-lg px-4"><IoIosCopy /></button>
+              </CopyToClipboard>
+              {copied && showMessage && (
+                <span style={{ color: "red" }}><IoIosDoneAll /></span>
+              )}
+            </div>
           </CardContent>
-          <CardContent className="grid grid-cols-1">
+          <CardContent className="w-full">
             <Tabs_Message username={user.username} />
           </CardContent>
+
         </Card>
       ) : (
         <div className="h-screen text-balance font-bold text-3xl text-white flex justify-center items-center">
           <div>
             <h1>You need to log in to view this page</h1>
             <LoginButton mode="modal" asChild>
-              <Button variant="secondary" size="lg">
+              <Button variant="secondary" size="lg" className="flex justify-center items-center">
                 Sign in
               </Button>
             </LoginButton>
           </div>
+          
         </div>
       )}
     </>

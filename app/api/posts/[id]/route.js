@@ -34,67 +34,37 @@ export const GET = async (request, { params }) => {
 export const POST = async (request) => {
   try {
     const body = await request.json();
-    const {
-      content,
-      senderId,
-      receiverId,
-      senderUsernameId,
-      img1,
-      img2,
-      img3,
-      img4,
-      img5,
-      img6,
-      img7,
-      img8,
-      img9,
-      img10,
-      img11,
-      img12,
-    } = body;
+    const { followerId, followingId } = body;
 
-    const newMessage = await db.message.create({
+    const follow = await db.follow.create({
       data: {
-        content,
-        senderId,
-        receiverId,
-        senderUsernameId,
-        img1,
-        img2,
-        img3,
-        img4,
-        img5,
-        img6,
-        img7,
-        img8,
-        img9,
-        img10,
-        img11,
-        img12,
+        followerId,
+        followingId,
       },
     });
 
-    return NextResponse.json(newMessage);
+    return NextResponse.json(follow);
   } catch (error) {
     return NextResponse.json({ message: "POST ERROR", error }, { status: 500 });
   }
 };
-// هنا حذف الحساب فقط
-export const DELETE = async (request, { params }) => {
-  try {
-    const { id } = params;
 
-    // حذف المستخدم بشكل مباشر
-    await db.user.delete({
-      where: {
-        username: id,
-      },
-    });
+// // هنا حذف الحساب فقط
+// export const DELETE = async (request, { params }) => {
+//   try {
+//     const { id } = params;
 
-    // إرجاع استجابة بنجاح
-    return NextResponse.json({ message: "User deleted successfully" });
-  } catch (error) {
-    // تجاهل الخطأ الناتج من عدم وجود رسائل مرتبطة
-    return NextResponse.json({ message: "User deleted Erorr" });
-  }
-};
+//     // حذف المستخدم بشكل مباشر
+//     await db.user.delete({
+//       where: {
+//         username: id,
+//       },
+//     });
+
+//     // إرجاع استجابة بنجاح
+//     return NextResponse.json({ message: "User deleted successfully" });
+//   } catch (error) {
+//     // تجاهل الخطأ الناتج من عدم وجود رسائل مرتبطة
+//     return NextResponse.json({ message: "User deleted Erorr" });
+//   }
+// };
