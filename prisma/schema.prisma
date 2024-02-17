@@ -34,19 +34,17 @@ model User {
   comments              Comment[]              @relation("UserComments")
   followers             Follow[]               @relation("FollowerRelation")
   following             Follow[]               @relation("FollowingRelation")
-
 }
 
 model Follow {
-  id          String @id @default(cuid()) @map("_id")
-  follower    User   @relation("FollowerRelation", fields: [followerUsername], references: [username])
+  id                String @id @default(cuid()) @map("_id")
+  follower          User   @relation("FollowerRelation", fields: [followerUsername], references: [username])
   followerUsername  String @db.String
-  following   User   @relation("FollowingRelation", fields: [followingUsername], references: [username])
+  following         User   @relation("FollowingRelation", fields: [followingUsername], references: [username])
   followingUsername String @db.String
 
   @@unique([followerUsername, followingUsername])
 }
-
 
 model Message {
   id               String   @id @default(cuid()) @map("_id")
@@ -66,6 +64,7 @@ model Message {
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
   isPublic         Boolean  @default(false)
+  isRead           Boolean  @default(false)
   avatar           String?  @default("")
   senderUsername   User?    @relation("UsernameMessages", fields: [senderUsernameId], references: [username])
   senderUsernameId String   @db.String
@@ -75,7 +74,6 @@ model Message {
   receiverId       String
 
   comments Comment[] @relation("MessageComments")
-
 }
 
 model Comment {
@@ -87,12 +85,12 @@ model Comment {
   img4      String?
   img5      String?
   img6      String?
+  isRead    Boolean  @default(false)
   createdAt DateTime @default(now())
   user      User?    @relation("UserComments", fields: [userId], references: [id])
   userId    String
   message   Message  @relation("MessageComments", fields: [messageId], references: [id])
   messageId String
-
 }
 
 model Account {

@@ -39,8 +39,11 @@ import { FormSuccess } from "@/components/form-success";
 import { UserRole } from "@prisma/client";
 import { UserButton } from "@/components/auth/user-button";
 import { IoIosCopy } from "react-icons/io";
-import { IoIosDoneAll  } from "react-icons/io";
+import { IoIosDoneAll } from "react-icons/io";
 import Tabs_Message from "@/components/comps/profile/Tabs_Messsage";
+
+import { Textarea } from "@/components/ui/textarea";
+import { toast } from "@/components/ui/use-toast";
 
 const SettingsPage = () => {
   const user = useCurrentUser();
@@ -104,7 +107,7 @@ const SettingsPage = () => {
                 <UserButton />
               </div>
               <p className="basis-full text-2xl font-semibold text-center">
-                ⚙️ Profile Settings
+                {user.name}
               </p>
 
               <Drawer>
@@ -162,13 +165,18 @@ const SettingsPage = () => {
                                       placeholder="username"
                                       defaultValue={user?.username}
                                       disabled={isPending}
-                                      className="lowercase"
+                                      onChange={(e) => {
+                                        const lowercaseValue =
+                                          e.target.value.toLowerCase();
+                                        field.onChange(lowercaseValue);
+                                      }}
                                     />
                                   </FormControl>
                                   <FormMessage />
                                 </FormItem>
                               )}
                             />
+
                             <FormField
                               control={form.control}
                               name="bio"
@@ -176,13 +184,15 @@ const SettingsPage = () => {
                                 <FormItem>
                                   <FormLabel>bio</FormLabel>
                                   <FormControl>
-                                    <Input
+                                    <Textarea
+                                      placeholder="Tell us a little bit about yourself"
+                                      className="resize-none h-32"
                                       {...field}
-                                      placeholder="bio"
                                       defaultValue={user?.bio}
                                       disabled={isPending}
                                     />
                                   </FormControl>
+
                                   <FormMessage />
                                 </FormItem>
                               )}
@@ -260,37 +270,43 @@ const SettingsPage = () => {
                   </DrawerFooter>
                 </DrawerContent>
               </Drawer>
-              
             </div>
           </CardHeader>
           <CardContent className="py-2">
             <div className="flex justify-between items-center space-x-2">
-              <h1 className="p-2 px-4 rounded-lg w-full  bg-gray-100">{textToCopy}</h1>
+              <h1 className="p-2 px-4 rounded-lg w-full  bg-gray-100">
+                {textToCopy}
+              </h1>
               <CopyToClipboard text={textToCopy} onCopy={handleCopy}>
-
-                <button className="p-3 bg-gray-200 rounded-lg px-4"><IoIosCopy /></button>
+                <button className="p-3 bg-gray-200 rounded-lg px-4">
+                  <IoIosCopy />
+                </button>
               </CopyToClipboard>
               {copied && showMessage && (
-                <span style={{ color: "red" }}><IoIosDoneAll /></span>
+                <span style={{ color: "red" }}>
+                  <IoIosDoneAll />
+                </span>
               )}
             </div>
           </CardContent>
           <CardContent className="w-full">
             <Tabs_Message username={user.username} />
           </CardContent>
-
         </Card>
       ) : (
         <div className="h-screen text-balance font-bold text-3xl text-white flex justify-center items-center">
           <div>
             <h1>You need to log in to view this page</h1>
             <LoginButton mode="modal" asChild>
-              <Button variant="secondary" size="lg" className="flex justify-center items-center">
+              <Button
+                variant="secondary"
+                size="lg"
+                className="flex justify-center items-center"
+              >
                 Sign in
               </Button>
             </LoginButton>
           </div>
-          
         </div>
       )}
     </>

@@ -1,5 +1,3 @@
-import { Poppins, Rubik } from "next/font/google";
-
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { LoginButton } from "@/components/auth/login-button";
@@ -12,11 +10,7 @@ import img1 from "@/assets/2299884_lovemessage.png";
 import { FaFacebook } from "react-icons/fa";
 import { Social } from "@/components/auth/social";
 import AccordionSingle from "@/components/comps/Accordion/Accordionsingle";
-
-const rubik = Rubik({
-  subsets: ["arabic"],
-  weight: ["500"],
-});
+import Resizable from "@/components/comps/Resizable/Resizable";
 
 export default async function Home() {
   const session = await auth();
@@ -30,7 +24,7 @@ export default async function Home() {
     );
   } else {
     return (
-      <main className={cn("-5 ", rubik.className)}>
+      <main className={cn("-5 ")}>
         <div className="cover flex flex-col items-center bg-cover bg-no-repeat bg-center object-center h-full py-10 *:text-center *:font-normal">
           <h1 className="text-5xl font-semibold text-white mt-12 mb-5">
             ارسل رسالة بشكل مجهول
@@ -69,7 +63,24 @@ export default async function Home() {
           </div>
         </div>
 
-        <div className="py-10 bg-amber-500 hidden">
+        <div className="flex justify-center items-center py-14 bg-emerald-500">
+          <div className="w-[800px] max-md:w-full max-md:mx-16 max-sm:mx-5 my-10">
+            <h1 className={cn("text-3xl font-semibold text-center pb-10 ")}>
+              كيفية الاستخدام
+            </h1>
+            <Resizable />
+          </div>
+        </div>
+
+        <div className="flex justify-center items-center bg-teal-500">
+          <div className="w-[500px] max-md:w-full max-md:mx-16 max-sm:mx-5 my-10">
+            <h1 className={cn("text-3xl font-semibold text-center py-5 ")}>
+              أسئلة متكررة
+            </h1>
+            <AccordionSingle />
+          </div>
+        </div>
+        <div className="py-10 bg-teal-400">
           <h1 className="text-center text-base mb-5">Get the app</h1>
           <div className="flex justify-center items-center gap-5">
             <Button variant="secondary" size="lg" className="gap-5">
@@ -80,20 +91,6 @@ export default async function Home() {
               <IoLogoAppleAppstore className="text-xl" />
               <span>Apple Store</span>
             </Button>
-          </div>
-        </div>
-
-        <div className="flex justify-center items-center bg-emerald-500">
-          <div className="w-[500px] max-md:w-full max-md:mx-16 max-sm:mx-5 my-10">
-            <h1
-              className={cn(
-                "text-3xl font-semibold text-center py-5 ",
-                rubik.className
-              )}
-            >
-              اسئلة شائعة
-            </h1>
-            <AccordionSingle />
           </div>
         </div>
       </main>
