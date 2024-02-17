@@ -28,7 +28,7 @@ interface Profile {
 }
 
 async function getPostsDataById(postId: string): Promise<Profile> {
-  const res = await fetch(`http://localhost:3000/api/posts/${postId}`, {
+  const res = await fetch(`https://rsalaco.vercel.app/api/posts/${postId}`, {
     cache: "no-store",
   });
   return res.json();
@@ -45,7 +45,6 @@ export default function ReceivedMessages(params: { slug: any }) {
     fetchData(); // Fetch data initially
     const interval = setInterval(fetchData, 5000); // Fetch data every 5 seconds
     return () => clearInterval(interval); // Cleanup interval on component unmount
-
 
     fetchData();
   }, [params.slug]);
