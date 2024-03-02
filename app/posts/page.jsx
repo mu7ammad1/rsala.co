@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 
 async function getPostsData() {
-  const res = await fetch(`${process.env.URL_RSASLA}/api/posts`);
+  const res = await fetch(`https://rsalaco.vercel.app/api/posts`);
   return res.json();
 }
 
